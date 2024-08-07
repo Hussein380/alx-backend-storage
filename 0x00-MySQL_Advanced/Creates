@@ -1,0 +1,22 @@
+-- of an item after adding a new order.
+
+-- Drop the trigger if it already exists to avoid errors
+DROP TRIGGER IF EXISTS reduce_quantity;
+
+-- Change the delimiter to $$
+DELIMITER $$
+
+-- Create the trigger
+CREATE TRIGGER reduce_quantity
+AFTER INSERT ON orders
+FOR EACH ROW
+BEGIN
+    -- Update the quantity of the item in the items table
+    UPDATE items
+    SET quantity = quantity - NEW.number
+    WHERE name = NEW.item_name;
+END $$
+
+-- Change the delimiter back to ;
+DELIMITER ;
+
